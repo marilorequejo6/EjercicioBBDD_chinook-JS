@@ -1,7 +1,7 @@
 const {db} = require('./datos'); // Importamos la conexión a la base de datos
 
 // EJERCICIO 1: Customers donde City contiene 'on' y 'as'
-db.all(`SELECT * FROM customers WHERE City LIKE '%on%' OR City LIKE '%as%'`, [], (err, rows) => {
+db.all(`SELECT * FROM customers WHERE City LIKE ? OR City LIKE ?`, ['%on%', '%as%'], (err, rows) => {
     if (err) throw err;
     console.log("Ejercicio 1:", rows);
 });
@@ -36,8 +36,8 @@ db.all(`
     SELECT invoices.InvoiceId, customers.CustomerId, customers.City 
     FROM invoices 
     INNER JOIN customers ON invoices.CustomerId = customers.CustomerId 
-    WHERE customers.City = 'London'
-  `, (err, rows) => {
+    WHERE customers.City = ?
+  `, ['London'], (err, rows) => {
     if (err) throw err;
     console.log("Ejercicio 5:", rows);
 })
@@ -60,8 +60,8 @@ db.get(`
     SELECT sum(i.Total) AS 'Total Londres' 
     FROM invoices i 
     INNER JOIN customers c ON i.CustomerId = c.CustomerId
-    WHERE c.City = 'London'
-  `, (err, rows) => {
+    WHERE c.City = ?
+  `, ['London'], (err, rows) => {
     if (err) throw err;
     console.log("Ejercicio 7:", rows);
 });
@@ -88,9 +88,9 @@ db.all(`
     SELECT c.Country AS 'País', count(c.CustomerId) AS 'Número de clientes' 
     FROM customers c
     GROUP BY c.Country 
-    HAVING count(c.CustomerId) > 3
+    HAVING count(c.CustomerId) > ?
     ORDER BY c.Country DESC
-  `, (err, rows) => {
+  `, [3], (err, rows) => {
     if (err) throw err;
     console.log("Ejercicio 10:", rows);
 });
@@ -102,9 +102,9 @@ db.all(`
     INNER JOIN media_types mt ON t.MediaTypeId = mt.MediaTypeId
     INNER JOIN albums a ON t.AlbumId = a.AlbumId
     INNER JOIN artists ar ON a.ArtistId = ar.ArtistId
-    WHERE ar.Name = 'AC/DC'
+    WHERE ar.Name = ?
     ORDER BY t.Name
-  `, (err, rows) => {
+  `, ['AC/DC'], (err, rows) => {
     if (err) throw err;
     console.log("Ejercicio 11:", rows);
 });
